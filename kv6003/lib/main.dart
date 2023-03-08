@@ -14,10 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'treeTRIP',
       theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-      colorScheme: darkColorScheme
-      ),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -36,12 +33,27 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Theme.of(context).colorScheme.background,
-      systemNavigationBarColor: Theme.of(context).colorScheme.background,
-      systemNavigationBarIconBrightness: Brightness.dark,
-      statusBarIconBrightness: Brightness.dark,
-    ));
+
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isDarkMode = brightness == Brightness.dark;
+
+    if(isDarkMode){
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Theme.of(context).colorScheme.background,
+        systemNavigationBarColor: Theme.of(context).colorScheme.background,
+        systemNavigationBarIconBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.light
+      ));
+    }
+    else{
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+          statusBarColor: Theme.of(context).colorScheme.background,
+          systemNavigationBarColor: Theme.of(context).colorScheme.background,
+          systemNavigationBarIconBrightness: Brightness.dark,
+          statusBarIconBrightness: Brightness.dark
+      ));
+    }
+
     return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: Theme.of(context).colorScheme.background,
@@ -67,7 +79,7 @@ class StartupCard extends StatelessWidget {
             text: TextSpan(
               children: <TextSpan>[
                 TextSpan(text: 'tree', style: GoogleFonts.robotoSerif(fontStyle: FontStyle.italic, fontSize: 57, fontWeight: FontWeight.w900, color: Theme.of(context).colorScheme.onSurfaceVariant)),
-                TextSpan(text: 'TRIP', style: GoogleFonts.roboto(fontWeight: FontWeight.w600, fontSize: 57, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                TextSpan(text: 'TRIP', style: GoogleFonts.robotoFlex(fontWeight: FontWeight.w600, fontSize: 57, color: Theme.of(context).colorScheme.onSurfaceVariant)),
               ]
             )
           ),
