@@ -14,10 +14,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'treeTRIP',
       theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-      //darkTheme: ThemeData(
-      //  useMaterial3: true,
-      //colorScheme: darkColorScheme
-      //),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+      colorScheme: darkColorScheme
+      ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
