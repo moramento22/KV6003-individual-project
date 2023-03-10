@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'treeTRIP',
       theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
       darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-      home: const LandingPage(title: 'Flutter Demo Home Page'),
+      home: const LandingPage(title: 'treeTRIP'),
     );
   }
 }
@@ -40,7 +40,7 @@ class _LandingPageState extends State<LandingPage> {
     }
 
     startTime() async {
-      var duration = const Duration(seconds: 5);
+      var duration = const Duration(seconds: 2);
       return Timer(duration, route);
     }
 
@@ -70,7 +70,10 @@ class _LandingPageState extends State<LandingPage> {
     return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: Theme.of(context).colorScheme.background,
-        body: const SafeArea(child: Center(child: StartupCard())));
+        body: const SafeArea(child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Center(child: StartupCard()),
+        )));
   }
 }
 
