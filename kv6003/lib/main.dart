@@ -34,9 +34,9 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   @override
   void initState() {
-
     route() {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SearchPage()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const SearchPage()));
     }
 
     startTime() async {
@@ -70,7 +70,8 @@ class _LandingPageState extends State<LandingPage> {
     return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: Theme.of(context).colorScheme.background,
-        body: const SafeArea(child: Padding(
+        body: const SafeArea(
+            child: Padding(
           padding: EdgeInsets.all(16),
           child: Center(child: StartupCard()),
         )));
@@ -92,17 +93,16 @@ class StartupCard extends StatelessWidget {
                 text: 'tree',
                 style: GoogleFonts.robotoSerif(
                     fontStyle: FontStyle.italic,
-                    fontSize: 57,
+                    fontSize: Theme.of(context).textTheme.displayLarge?.fontSize,
                     fontWeight: FontWeight.w900,
                     color: Theme.of(context).colorScheme.onSurfaceVariant)),
             TextSpan(
                 text: 'TRIP',
                 style: GoogleFonts.robotoFlex(
                     fontWeight: FontWeight.w600,
-                    fontSize: 57,
+                    fontSize: Theme.of(context).textTheme.displayLarge?.fontSize,
                     color: Theme.of(context).colorScheme.onSurfaceVariant)),
           ])),
         ));
   }
 }
-
