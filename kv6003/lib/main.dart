@@ -40,7 +40,7 @@ class _LandingPageState extends State<LandingPage> {
     }
 
     startTime() async {
-      var duration = const Duration(seconds: 2);
+      var duration = const Duration(seconds: 1);
       return Timer(duration, route);
     }
 

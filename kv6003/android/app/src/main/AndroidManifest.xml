@@ -1,9 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.kv6003">
    <application
-        android:label="kv6003"
+        android:label="treeTRIP"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/tt"
+       android:roundIcon="@mipmap/tt_round"
+       >
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -168,7 +168,6 @@ class _WelcomeCardState extends State<WelcomeCard> {
                           onPressed: onPressed,
                           icon: _icon,
                           style: IconButton.styleFrom(
-                              backgroundColor: Colors.transparent,
                               focusColor: Theme.of(context)
                                   .colorScheme
                                   .onSurfaceVariant
@@ -177,9 +176,16 @@ class _WelcomeCardState extends State<WelcomeCard> {
                                   .colorScheme
                                   .onSurface
                                   .withOpacity(0.12),
-                              side: BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.outline)),
+                              side: onPressed == null ? BorderSide(
+                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.12)
+                              ):BorderSide(
+                                color: Theme.of(context).colorScheme.outline
+                              ),).copyWith(foregroundColor: MaterialStateProperty.resolveWith((Set<MaterialState> states) {
+                                if(states.contains(MaterialState.pressed)) {
+                                  return Theme.of(context).colorScheme.onSurface;
+                                }
+                                return null;
+                          })),
                         )
                       ],
                     ),
