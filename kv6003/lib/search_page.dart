@@ -5,6 +5,58 @@ class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
   @override
   Widget build(BuildContext context) {
+
+    List<String> nationalParks = ["Brecon Beacons", "Cairngorns", "Dartmoor", "Exmoor", "Lake District", "Loch Lomond and the Trossachs", "New Forest", "North York Moors", "Northumberland", "Peak District", "Pembrokeshire Coast", "Snowdonia", "South Downs", "The Broads", "Yorkshire Dales"];
+    List<String> nationalParksPhotos = ["assets/images/Brecon_beacons_arp.jpg", "assets/images/The_Cairngorms_-_geograph.org.uk_-_1766434.jpg", "assets/images/View_to_Sharpitor_from_Meavy.jpeg", "assets/images/Malmsmead_Hill,_Exmoor_-_geograph.org.uk_-_80944.jpg", "assets/images/Keswick_Panorama_-_Oct_2009.jpg", "assets/images/Loch_Katrine.jpg", "assets/images/Beech_trees_in_Mallard_Wood,_New_Forest_-_geograph.org.uk_-_779513.jpg", "assets/images/Heather_moorland_on_the_North_York_Moors.jpg", "assets/images/Northumberland_National_Park.jpg", "assets/images/Mam_Tor.jpg", "assets/images/Barafundle_Bay_beach_(May_2009).jpg", "assets/images/Llyn_Llydaw_from_Crib_Goch_2.jpg", "assets/images/Devils_Dyke.jpg", "assets/images/Breydon-north.jpg", "assets/images/2015_Swaledale_from_Kisdon_Hill.jpg"];
+    List<Widget> parksList = [];
+
+    for (int i = 0; i < nationalParks.length; i++)
+    {
+      parksList.add(
+          InkWell(
+            onTap: () {},
+            child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 8,
+                      bottom: 8,
+                      left: 16,
+                      right: 16,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(nationalParksPhotos[i],
+                        width: 56,
+                        height: 56,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(nationalParks[i],
+                      style: GoogleFonts.robotoFlex(
+                        fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
+                        fontStyle: Theme.of(context).textTheme.bodyLarge?.fontStyle,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                  )
+                ]
+            ),
+          ),
+      );
+
+      if(i == nationalParks.length - 1)
+        {
+          parksList.add(
+            const SizedBox(
+              height: 72,
+            )
+          );
+        }
+    }
+
     return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: Theme.of(context).colorScheme.background,
@@ -44,71 +96,16 @@ class SearchPage extends StatelessWidget {
                 height: 16,
               ),
               Expanded(child: ListView(
-                children: [
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8,
-                          bottom: 8,
-                          left: 16,
-                          right: 16,
-                        ),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset("assets/images/Keswick_Panorama_-_Oct_2009.jpg",
-                        width: 56,
-                        height: 56,
-                          fit: BoxFit.cover,
-                        ),
-                        ),
-                      ),
-                      Text("Lake District",
-                        style: GoogleFonts.robotoFlex(
-                          fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
-                          fontStyle: Theme.of(context).textTheme.bodyLarge?.fontStyle,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      )
-                    ]
-                  ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8,
-                          bottom: 8,
-                          left: 16,
-                          right: 16,
-                        ),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset("assets/images/Mam_Tor.jpg",
-                        width: 56,
-                        height: 56,
-                          fit: BoxFit.cover,
-                        ),
-                        ),
-                      ),
-                      Text("Peak District",
-                        style: GoogleFonts.robotoFlex(
-                          fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
-                          fontStyle: Theme.of(context).textTheme.bodyLarge?.fontStyle,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      )
-                    ]
-                  )
-                ],
+                children:  parksList,
               ))
             ]),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: const FloatingActionButton.extended(
+        floatingActionButton: FloatingActionButton.extended(
           elevation: 1,
-          onPressed: AsyncSnapshot.nothing,
-          label: Text("See Overview"),
+          onPressed: () {},
+          label: const Text("See Overview"),
         ),
     );
   }
