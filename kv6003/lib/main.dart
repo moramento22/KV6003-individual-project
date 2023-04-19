@@ -163,90 +163,86 @@ class _SearchPageState extends State<SearchPage> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(children: [
-            const WelcomeCard(),
-            const SizedBox(
-              height: 16,
+        child: Column(children: [
+          const WelcomeCard(),
+          const SizedBox(
+            height: 6,
+          ),
+          Material(
+            borderRadius: const BorderRadius.all(Radius.circular(200)),
+            shadowColor: Colors.transparent,
+            elevation: 6,
+            color: Theme.of(context).colorScheme.surface,
+            surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
+            child: TextField(
+              obscureText: false,
+              decoration: InputDecoration(
+                  suffixIcon: const Icon(Icons.location_searching_rounded),
+                  suffixIconColor:
+                      Theme.of(context).colorScheme.onSurfaceVariant,
+                  prefixIcon: const Icon(Icons.search_rounded),
+                  prefixIconColor: Theme.of(context).colorScheme.onSurface,
+                  hintText: "Enter Location",
+                  border: InputBorder.none,
+                  constraints:
+                      const BoxConstraints(minHeight: 56, maxHeight: 56),
+                  hintStyle: GoogleFonts.robotoFlex(
+                    fontWeight: Theme.of(context).textTheme.bodyLarge?.fontWeight,
+                    fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
+                  )),
             ),
-            Material(
-              borderRadius: const BorderRadius.all(Radius.circular(200)),
-              shadowColor: Colors.transparent,
-              elevation: 6,
-              color: Theme.of(context).colorScheme.surface,
-              surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
-              child: TextField(
-                obscureText: false,
-                decoration: InputDecoration(
-                    suffixIcon: const Icon(Icons.location_searching_rounded),
-                    suffixIconColor:
-                        Theme.of(context).colorScheme.onSurfaceVariant,
-                    prefixIcon: const Icon(Icons.search_rounded),
-                    prefixIconColor: Theme.of(context).colorScheme.onSurface,
-                    hintText: "Enter Location",
-                    border: InputBorder.none,
-                    constraints:
-                        const BoxConstraints(minHeight: 56, maxHeight: 56),
-                    hintStyle: GoogleFonts.robotoFlex(
-                      fontWeight: Theme.of(context).textTheme.bodyLarge?.fontWeight,
-                      fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
-                    )),
-              ),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Expanded(
-                child: Material(
-              child: ListView.builder(
-                  itemCount: 16,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (index == 15) {
-                      return const SizedBox(
-                        height: 64,
-                      );
-                    }
-                      return ListTile(
-                        tileColor: ColorScheme.fromSeed(
-                                brightness: isDarkMode ? Brightness.dark : Brightness.light,
-                                seedColor: parks[index].color)
-                            .surface,
-                        textColor: ColorScheme.fromSeed(
-                                brightness: isDarkMode ? Brightness.dark : Brightness.light,
-                                seedColor: parks[index].color)
-                            .onSurface,
-                        selectedTileColor: ColorScheme.fromSeed(
-                                brightness: isDarkMode ? Brightness.dark : Brightness.light,
-                                seedColor: parks[index].color)
-                            .onSurface
-                            .withOpacity(0.12),
-                        selectedColor: ColorScheme.fromSeed(
-                                brightness: isDarkMode ? Brightness.dark : Brightness.light,
-                                seedColor: parks[index].color)
-                            .onSurface,
-                        title: Text(parks[index].name),
-                        leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(
-                              parks[index].photo,
-                              fit: BoxFit.cover,
-                              height: 40,
-                              width: 40,
-                            )),
-                        selected: index == _selectedIndex,
-                        onTap: () {
-                          setState(() {
-                            _selectedIndex = index;
-                          });
-                        },
-                      );
-                  }),
-            ))
-          ]),
-        ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Expanded(
+              child: Material(
+            child: ListView.builder(
+                itemCount: 16,
+                itemBuilder: (BuildContext context, int index) {
+                  if (index == 15) {
+                    return const SizedBox(
+                      height: 64,
+                    );
+                  }
+                    return ListTile(
+                      tileColor: ColorScheme.fromSeed(
+                              brightness: isDarkMode ? Brightness.dark : Brightness.light,
+                              seedColor: parks[index].color)
+                          .surface,
+                      textColor: ColorScheme.fromSeed(
+                              brightness: isDarkMode ? Brightness.dark : Brightness.light,
+                              seedColor: parks[index].color)
+                          .onSurface,
+                      selectedTileColor: ColorScheme.fromSeed(
+                              brightness: isDarkMode ? Brightness.dark : Brightness.light,
+                              seedColor: parks[index].color)
+                          .onSurface
+                          .withOpacity(0.12),
+                      selectedColor: ColorScheme.fromSeed(
+                              brightness: isDarkMode ? Brightness.dark : Brightness.light,
+                              seedColor: parks[index].color)
+                          .onSurface,
+                      title: Text(parks[index].name),
+                      leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.asset(
+                            parks[index].photo,
+                            fit: BoxFit.cover,
+                            height: 40,
+                            width: 40,
+                          )),
+                      selected: index == _selectedIndex,
+                      onTap: () {
+                        setState(() {
+                          _selectedIndex = index;
+                        });
+                      },
+                    );
+                }),
+          ))
+        ]),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: OpenContainer(
@@ -275,86 +271,91 @@ class _SearchPageState extends State<SearchPage> {
             child: Scaffold(
               extendBodyBehindAppBar: true,
               body: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        SizedBox(
-                          height: 285,
-                          child: Card(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            color: isDarkMode ? ColorScheme.fromSeed(seedColor: parks[_selectedIndex].color, brightness: Brightness.dark).surfaceVariant : ColorScheme.fromSeed(seedColor: parks[_selectedIndex].color).surfaceVariant,
-                            clipBehavior: Clip.antiAlias,
-                            elevation: 0,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.asset(parks[_selectedIndex].photo, height: 229, fit: BoxFit.cover)),
-                                Expanded(
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        child: Text(parks[_selectedIndex].name, textAlign: TextAlign.left, style: GoogleFonts.robotoSerif(
-                                          color: isDarkMode ? ColorScheme.fromSeed(seedColor: parks[_selectedIndex].color, brightness: Brightness.dark).onSurfaceVariant : ColorScheme.fromSeed(seedColor: parks[_selectedIndex].color).onSurfaceVariant,
-                                            fontStyle: FontStyle.italic,
-                                            fontSize: Theme.of(context).textTheme.headlineLarge?.fontSize,
-                                            fontWeight: FontWeight.w900,
-                                        )
-                                        ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        height: 285,
+                        child: Card(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          color: isDarkMode ? ColorScheme.fromSeed(seedColor: parks[_selectedIndex].color, brightness: Brightness.dark).surfaceVariant : ColorScheme.fromSeed(seedColor: parks[_selectedIndex].color).surfaceVariant,
+                          clipBehavior: Clip.antiAlias,
+                          elevation: 0,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.asset(parks[_selectedIndex].photo, height: 229, fit: BoxFit.cover)),
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(parks[_selectedIndex].name, textAlign: TextAlign.left, style: GoogleFonts.robotoSerif(
+                                        color: isDarkMode ? ColorScheme.fromSeed(seedColor: parks[_selectedIndex].color, brightness: Brightness.dark).onSurfaceVariant : ColorScheme.fromSeed(seedColor: parks[_selectedIndex].color).onSurfaceVariant,
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: Theme.of(context).textTheme.headlineLarge?.fontSize,
+                                          fontWeight: FontWeight.w900,
+                                      )
                                       ),
                                     ),
                                   ),
                                 ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Text(
+                                    parks[_selectedIndex].description,
+                                    style: GoogleFonts.robotoFlex(
+                                        fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
+                                        fontWeight: Theme.of(context).textTheme.bodyLarge?.fontWeight,
+                                    )),
+                                Text(
+                                    "The trip for this park covers 5 different tree species\n",
+                                    style: GoogleFonts.robotoFlex(
+                                        fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
+                                        fontWeight: Theme.of(context).textTheme.bodyLarge?.fontWeight,
+                                    )
+                                ),
+                                Text(
+                                    'To start tap the "Start Trip" button at the bottom. To return to the list of locations tap the "Back" button.',
+                                    style: GoogleFonts.robotoFlex(
+                                        fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
+                                        fontWeight: Theme.of(context).textTheme.bodyLarge?.fontWeight,
+                                    )
+                                )
                               ],
                             ),
                           ),
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  Text(
-                                      parks[_selectedIndex].description,
-                                      style: GoogleFonts.robotoFlex(
-                                          fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
-                                          fontWeight: Theme.of(context).textTheme.bodyLarge?.fontWeight,
-                                      )),
-                                  Text(
-                                      "The trip for this park covers 10 different tree species\n",
-                                      style: GoogleFonts.robotoFlex(
-                                          fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
-                                          fontWeight: Theme.of(context).textTheme.bodyLarge?.fontWeight,
-                                      )
-                                  ),
-                                  Text(
-                                      'To start tap the "Start Trip" button at the bottom. To return to the list of locations tap the "Back" button.',
-                                      style: GoogleFonts.robotoFlex(
-                                          fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
-                                          fontWeight: Theme.of(context).textTheme.bodyLarge?.fontWeight,
-                                      )
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                        ),
-                        const Divider(),
-                        Row(
+                      ),
+                      const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             FilledButton.tonal(onPressed: close, child: const Text("Back")),
                             const SizedBox(width: 8),
-                            FilledButton.icon(onPressed: () {}, icon: const Icon(Icons.play_arrow_rounded), label: const Text("Start Trip"))
+                            FilledButton.icon(onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => TreesPage(parkName: parks[_selectedIndex].name))
+                              );
+                            }, icon: const Icon(Icons.play_arrow_rounded), label: const Text("Start Trip"))
                           ],
-                        )
-                      ],
-                    ),
+                        ),
+                      )
+                    ],
                   )),
             ),
           )),
@@ -451,6 +452,169 @@ class _WelcomeCardState extends State<WelcomeCard> {
               ],
             ),
           )),
+    );
+  }
+}
+
+class Tree{
+  String name;
+  String latinName;
+  String photo1;
+  String photo2;
+  String photo3;
+
+  Tree({required this.name, required this.latinName, required this.photo1, required this.photo2, required this.photo3});
+}
+
+List<Tree> trees = [
+  Tree(
+    name: "Apple",
+    latinName: "malus x domestica",
+    photo1: "assets/images/marek-studzinski-3D6yReT06p0-unsplash (2).jpg",
+    photo2: "assets/images/pascal-debrunner-8PCdIXlz_Ko-unsplash.jpg",
+    photo3: "assets/images/aaron-blanco-tejedor-F5xZDJI2n2g-unsplash.jpg"
+  ),
+  Tree(
+    name: "Black Alder",
+    latinName: "alnus glutinosa",
+    photo1: "assets/images/20120904Alnus_glutinosa01.jpg",
+    photo2: "assets/images/960px-20120904Alnus_glutinosa14.jpg",
+    photo3: "assets/images/771px-Alkottar.jpg"
+  ),
+  Tree(
+    name: "European Ash",
+    latinName: "fraxinus excelsior",
+    photo1: "assets/images/480px-Le_Roeulx_AR9JPG.jpg",
+    photo2: "assets/images/480px-Fraxinus_excelsior_4560.jpg",
+    photo3: "assets/images/960px-Fraxinus_excelsior.jpg",
+  ),
+  Tree(
+    name: "English Oak",
+    latinName: "quercus robur",
+    photo1: "assets/images/910px-Quercus_robur_in_hedge.jpg",
+    photo2: "assets/images/1008px-Quercus_robur_flowers_kz01.jpg",
+    photo3: "assets/images/960px-Philbhu_P9020127_Knopper_Gall_-_Andricus_quercuscalicis.jpg"
+  ),
+  Tree(
+    name: "Maple",
+    latinName: "acer campestre",
+    photo1: "assets/images/540px-Acer_campestre_006.jpg",
+    photo2: "assets/images/1129px-Acer-campestre-flowers.jpg",
+    photo3: "assets/images/960px-Acer_campestre_009.jpg"
+  )
+];
+
+class TreesPage extends StatelessWidget {
+  const TreesPage({super.key, required this.parkName});
+
+  final String parkName;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        actions: [
+          IconButton(onPressed: () {showModalBottomSheet(context: context, builder: (BuildContext context) {
+            return SizedBox(
+              height: 144,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView(
+                  children: const [
+                    ListTile(
+                      leading: Icon(Icons.restart_alt_rounded),
+                      title: Text("Reset trip and return to the overview")
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.home_rounded),
+                      title: Text("Leave trip and come back to home screen")
+                    )
+                  ],
+                ),
+              ),
+            );
+          });}, icon: Icon(Icons.more_horiz_rounded, color: Theme.of(context).colorScheme.onSurface))
+        ],
+        automaticallyImplyLeading: false,
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(parkName, textAlign: TextAlign.left, style: GoogleFonts.robotoSerif(
+            fontStyle: FontStyle.italic,
+            fontSize: Theme.of(context).textTheme.headlineLarge?.fontSize,
+            fontWeight: FontWeight.w900,
+          )
+          ),
+        )
+      ),
+      body: SafeArea(
+        child: ListView.builder(
+          itemCount: 6,
+          itemBuilder: (BuildContext context, int index) {
+            if(index == 0)
+              {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: const [
+                      Text("To take a picture of a tree, tap the tree on the list below to reveal more complementary photos and tap the \"Take a photo\" button."),
+                      Divider()
+                    ],
+                  ),
+                );
+              }
+            return SizedBox(
+              height: 177,
+              child: GestureDetector(
+                onTap: () {},
+                child: Card(
+                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  clipBehavior: Clip.antiAlias,
+                  elevation: 0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Hero(tag: "photo1",
+                      child: ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.asset(trees[index-1].photo1, height: 95, fit: BoxFit.cover))),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: RichText(
+                                  text: TextSpan(
+                                      text: "${trees[index-1].name}\n",
+                                      style: GoogleFonts.robotoSerif(
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: Theme.of(context).textTheme.headlineLarge?.fontSize,
+                                          fontStyle: FontStyle.italic,
+                                        color: Theme.of(context).colorScheme.onSurface
+                                      ),
+                                      children: <TextSpan>[
+                                        TextSpan(text: "(${trees[index-1].latinName})", style: GoogleFonts.robotoSerif(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: Theme.of(context).textTheme.titleLarge?.fontSize,
+                                            fontStyle: FontStyle.italic,
+                                            color: Theme.of(context).colorScheme.onSurface
+                                        ))
+                                      ]
+                                  )
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      )
     );
   }
 }
