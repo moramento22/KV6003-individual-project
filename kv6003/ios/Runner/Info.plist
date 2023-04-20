@@ -47,5 +47,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>The app needs access to the camera to be able to take a photo of a tree.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone access is needed for the camera to work properly.</string>
 </dict>
 </plist>

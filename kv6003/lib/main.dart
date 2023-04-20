@@ -1,11 +1,13 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'color_schemes.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:animations/animations.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((value) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -248,7 +250,6 @@ class _SearchPageState extends State<SearchPage> {
       floatingActionButton: OpenContainer(
           closedBuilder: (context, open) {
             return FloatingActionButton.extended(
-              elevation: 1,
               onPressed: () {
                 if (_selectedIndex == -1) {
                   ScaffoldMessenger.of(context)
@@ -504,116 +505,334 @@ List<Tree> trees = [
   )
 ];
 
-class TreesPage extends StatelessWidget {
-  const TreesPage({super.key, required this.parkName});
-
+class TreesPage extends StatefulWidget {
+  const TreesPage({Key? key, required this.parkName}) : super(key: key);
   final String parkName;
 
   @override
+  State<TreesPage> createState() => _TreesPageState();
+}
+
+class _TreesPageState extends State<TreesPage> {
+  int _selectedIndex = -2;
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        actions: [
-          IconButton(onPressed: () {showModalBottomSheet(context: context, builder: (BuildContext context) {
-            return SizedBox(
-              height: 144,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListView(
-                  children: const [
-                    ListTile(
-                      leading: Icon(Icons.restart_alt_rounded),
-                      title: Text("Reset trip and return to the overview")
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.home_rounded),
-                      title: Text("Leave trip and come back to home screen")
-                    )
-                  ],
-                ),
-              ),
-            );
-          });}, icon: Icon(Icons.more_horiz_rounded, color: Theme.of(context).colorScheme.onSurface))
-        ],
-        automaticallyImplyLeading: false,
-        title: FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text(parkName, textAlign: TextAlign.left, style: GoogleFonts.robotoSerif(
-            fontStyle: FontStyle.italic,
-            fontSize: Theme.of(context).textTheme.headlineLarge?.fontSize,
-            fontWeight: FontWeight.w900,
-          )
-          ),
-        )
-      ),
-      body: SafeArea(
-        child: ListView.builder(
-          itemCount: 6,
-          itemBuilder: (BuildContext context, int index) {
-            if(index == 0)
-              {
-                return Padding(
+
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          actions: [
+            IconButton(onPressed: () {showModalBottomSheet(context: context, builder: (BuildContext context) {
+              return SizedBox(
+                height: 144,
+                child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: const [
-                      Text("To take a picture of a tree, tap the tree on the list below to reveal more complementary photos and tap the \"Take a photo\" button."),
-                      Divider()
+                  child: ListView(
+                    children: [
+                      ListTile(
+                        onTap: () {},
+                        leading: const Icon(Icons.restart_alt_rounded),
+                        title: const Text("Reset trip")
+                      ),
+                      ListTile(
+                        onTap: () {Navigator.popUntil(context, (Route<dynamic> predicate) => predicate.isFirst);},
+                        leading: const Icon(Icons.home_rounded),
+                        title: const Text("Leave trip and come back to home screen")
+                      )
                     ],
                   ),
-                );
-              }
-            return SizedBox(
-              height: 177,
-              child: GestureDetector(
-                onTap: () {},
+                ),
+              );
+            });}, icon: Icon(Icons.more_horiz_rounded, color: Theme.of(context).colorScheme.onSurface))
+          ],
+          automaticallyImplyLeading: false,
+          title: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(widget.parkName, textAlign: TextAlign.left, style: GoogleFonts.robotoSerif(
+              fontStyle: FontStyle.italic,
+              fontSize: Theme.of(context).textTheme.headlineLarge?.fontSize,
+              fontWeight: FontWeight.w900,
+            )
+            ),
+          )
+        ),
+        body: SafeArea(
+          child: ListView.builder(
+            itemCount: 6,
+            itemBuilder: (BuildContext context, int index) {
+              if(index == 0)
+                {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: const [
+                        Text("To take a picture of a tree, tap the tree on the list below to reveal more complementary hint photos and tap the \"Take a photo\" button."),
+                        Divider()
+                      ],
+                    ),
+                  );
+                }
+              return SizedBox(
+                height: 177,
                 child: Card(
                   color: Theme.of(context).colorScheme.surfaceVariant,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   clipBehavior: Clip.antiAlias,
                   elevation: 0,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Hero(tag: "photo1",
-                      child: ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.asset(trees[index-1].photo1, height: 95, fit: BoxFit.cover))),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: RichText(
-                                  text: TextSpan(
-                                      text: "${trees[index-1].name}\n",
-                                      style: GoogleFonts.robotoSerif(
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: Theme.of(context).textTheme.headlineLarge?.fontSize,
-                                          fontStyle: FontStyle.italic,
-                                        color: Theme.of(context).colorScheme.onSurface
-                                      ),
-                                      children: <TextSpan>[
-                                        TextSpan(text: "(${trees[index-1].latinName})", style: GoogleFonts.robotoSerif(
-                                            fontWeight: FontWeight.w300,
-                                            fontSize: Theme.of(context).textTheme.titleLarge?.fontSize,
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedIndex = index-1;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => TreeSpeciesPage(treeName: trees[_selectedIndex].name, photo1: trees[_selectedIndex].photo1, photo2: trees[_selectedIndex].photo2, photo3: trees[_selectedIndex].photo3))
+                        );
+                      });
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.asset(trees[index-1].photo1, height: 95, fit: BoxFit.cover)),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: RichText(
+                                    text: TextSpan(
+                                        text: "${trees[index-1].name}\n",
+                                        style: GoogleFonts.robotoSerif(
+                                            fontWeight: FontWeight.w900,
+                                            fontSize: Theme.of(context).textTheme.headlineLarge?.fontSize,
                                             fontStyle: FontStyle.italic,
-                                            color: Theme.of(context).colorScheme.onSurface
-                                        ))
-                                      ]
-                                  )
+                                          color: Theme.of(context).colorScheme.onSurface
+                                        ),
+                                        children: <TextSpan>[
+                                          TextSpan(text: "(${trees[index-1].latinName})", style: GoogleFonts.robotoSerif(
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: Theme.of(context).textTheme.titleLarge?.fontSize,
+                                              fontStyle: FontStyle.italic,
+                                              color: Theme.of(context).colorScheme.onSurface
+                                          ))
+                                        ]
+                                    )
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
+        )
+      ),
+    );
+  }
+}
+
+class TreeSpeciesPage extends StatefulWidget {
+  TreeSpeciesPage({super.key, required this.treeName, required this.photo1, required this.photo2, required this.photo3});
+
+  final String treeName;
+  final String photo1;
+  final String photo2;
+  final String photo3;
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  State<TreeSpeciesPage> createState() => _TreeSpeciesPageState();
+}
+
+class _TreeSpeciesPageState extends State<TreeSpeciesPage> {
+
+  bool _collapsedFab = false;
+  
+  void _onScroll() {
+    setState(() {
+      _collapsedFab = true;
+    });
+  }
+
+  @override
+  void initState() {
+    widget._scrollController.addListener(_onScroll);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget._scrollController.removeListener(_onScroll);
+    super.dispose();
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(widget.treeName,
+            textAlign: TextAlign.left,
+            style: GoogleFonts.robotoSerif(
+              fontStyle: FontStyle.italic,
+              fontSize: Theme.of(context).textTheme.headlineLarge?.fontSize,
+              fontWeight: FontWeight.w900
+            )
+          ),
+        )
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+          child: SingleChildScrollView(
+            controller: widget._scrollController,
+            child: Column(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                      widget.photo1,
+                      height: 380,
+                      width: 9999,
+                      fit: BoxFit.cover)
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                          widget.photo2,
+                          height: 380,
+                          width: 999,
+                          fit: BoxFit.cover)
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                          widget.photo3,
+                          height: 380,
+                          width: 999,
+                          fit: BoxFit.cover)
+                  ),
+                ),
+              ],
+            )
+          ),
         ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: AnimatedContainer(
+          height: 56,
+          width : !_collapsedFab ? 168 : 56,
+          duration: const Duration(milliseconds: 400),
+          child: Material(
+            color: Theme.of(context).colorScheme.primaryContainer,
+            child: InkWell(
+              onTap: () async {
+                await availableCameras().then((value) => Navigator.push(context, MaterialPageRoute(builder: (_) => Camera(cameras: value))));
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: !_collapsedFab ? Row(
+                  children: [
+                    Icon(Icons.photo_camera_rounded, color: Theme.of(context).colorScheme.onPrimaryContainer),
+                    const SizedBox(width: 16),
+                    Text("Take a photo", style: GoogleFonts.roboto(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      fontSize: Theme.of(context).textTheme.labelLarge?.fontSize,
+                      fontWeight: Theme.of(context).textTheme.labelLarge?.fontWeight
+                    ))
+                  ],
+                ) : Align(alignment: Alignment.centerLeft, child: Icon(Icons.photo_camera_rounded, color: Theme.of(context).colorScheme.onPrimaryContainer)),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class Camera extends StatefulWidget {
+  final List<CameraDescription>? cameras;
+  const Camera({Key? key, required this.cameras}) : super(key:key);
+
+  @override
+  State<Camera> createState() => _CameraState();
+}
+
+class _CameraState extends State<Camera> {
+  late CameraController _cameraController;
+
+  Future initCamera(CameraDescription cameraDescription) async {
+    _cameraController = CameraController(cameraDescription, ResolutionPreset.medium);
+
+    try {
+      await _cameraController.initialize().then((_) {
+        if(!mounted) return;
+        setState(() {});
+      });
+    } on CameraException catch(e) {
+      debugPrint("camera error $e");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initCamera(widget.cameras![0]);
+  }
+
+  @override
+  void dispose() {
+    _cameraController.dispose();
+    super.dispose();
+  }
+
+  Future takePicture() async {
+    if(!_cameraController.value.isInitialized) {return null;}
+    if(_cameraController.value.isTakingPicture) {return null;}
+    try {
+      await _cameraController.setFlashMode(FlashMode.off);
+    }on CameraException catch (e) {
+      debugPrint("Error occured while taking picture: $e");
+      return null;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(children: [
+          (_cameraController.value.isInitialized) ? CameraPreview(_cameraController) : Container(color: Colors.black, child: const Center(child: CircularProgressIndicator())),
+          const SizedBox(height: 60),
+          IconButton(
+            onPressed: takePicture,
+            iconSize: 50,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+            icon: const Icon(Icons.circle, color: Colors.white)
+          )
+        ],)
       )
     );
   }
