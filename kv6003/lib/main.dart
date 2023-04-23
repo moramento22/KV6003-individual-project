@@ -1,9 +1,13 @@
+import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'color_schemes.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:animations/animations.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -781,6 +785,7 @@ class Camera extends StatefulWidget {
 
 class _CameraState extends State<Camera> {
   late CameraController _cameraController;
+  bool _isRearCameraSelected = true;
 
   Future initCamera(CameraDescription cameraDescription) async {
     _cameraController = CameraController(cameraDescription, ResolutionPreset.medium);
@@ -807,32 +812,89 @@ class _CameraState extends State<Camera> {
     super.dispose();
   }
 
+  Future<String> _getModel(String assetPath) async {
+    if (Platform.isAndroid) {
+      return 'flutter_assets/$assetPath';
+    }
+    final path = '${(await getApplicationSupportDirectory()).path}/$assetPath';
+    await Directory(dirname(path)).create(recursive: true);
+    final file = File(path);
+    if (!await file.exists()) {
+      final byteData = await rootBundle.load(assetPath);
+      await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+    }
+    return file.path;
+  }
+
   Future takePicture() async {
+
+    final options = ImageLabelerOptions(confidenceThreshold: 0.5);
+    final imageLabeler = ImageLabeler(options: options);
+
     if(!_cameraController.value.isInitialized) {return null;}
     if(_cameraController.value.isTakingPicture) {return null;}
     try {
       await _cameraController.setFlashMode(FlashMode.off);
+      XFile picture = await _cameraController.takePicture();
+      final InputImage inputImage = InputImage.fromFilePath(picture.path);
+
+      final List<ImageLabel> labels = await imageLabeler.processImage(inputImage);;
+
+      for(ImageLabel label in labels)
+        {
+          final String text = label.label;
+          print(text);
+        }
+
     }on CameraException catch (e) {
       debugPrint("Error occured while taking picture: $e");
       return null;
     }
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(children: [
-          (_cameraController.value.isInitialized) ? CameraPreview(_cameraController) : Container(color: Colors.black, child: const Center(child: CircularProgressIndicator())),
-          const SizedBox(height: 60),
-          IconButton(
-            onPressed: takePicture,
-            iconSize: 50,
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-            icon: const Icon(Icons.circle, color: Colors.white)
-          )
-        ],)
+        child: Stack(children: [
+          (_cameraController.value.isInitialized) ? CameraPreview(_cameraController) : Container(color: Theme.of(context).colorScheme.background, child: const Center(child: CircularProgressIndicator())),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: MediaQuery.of(context).size.height*0.2,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.background,
+              ),
+              child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                Expanded(
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    iconSize: 30,
+                    icon: Icon(
+                      _isRearCameraSelected ? Icons.flip_camera_android_outlined : Icons.flip_camera_android_rounded,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                    onPressed: () {
+                      setState(() => _isRearCameraSelected = !_isRearCameraSelected);
+                      initCamera(widget.cameras![_isRearCameraSelected ? 0 : 1]);
+                    },
+                  )
+                ),
+                Expanded(
+                  child: IconButton(
+                    onPressed: takePicture,
+                    iconSize: 50,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    icon: Icon(Icons.circle, color: Theme.of(context).colorScheme.onBackground),
+                  )
+                ),
+                const Spacer(),
+              ]),
+            )
+          ),
+        ])
       )
     );
   }
