@@ -6,3 +6,4 @@ Part of assignment for the KV6003 Individual Computing Project module of the BSc
 
 -	Author: Patryk Wieczorek, w1907588, patryk.wieczorek@northumbria.ac.uk
 -	Supervisor: Dr. Kyle Montague, Associate Professor at Northumbria University, kyle.montague@northumbria.ac.uk
+- Second Marker: Dr. Yingke Chen, Associate Professor at Northumbria University, yingke.chen@northumbria.ac.uk
