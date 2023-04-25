@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' as io;
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,20 +23,21 @@ class TreeSpeciesPage extends StatefulWidget {
 
 class _TreeSpeciesPageState extends State<TreeSpeciesPage> {
 
-  File? image;
+  io.File? image;
   bool fromCamera = false;
 
   Future<String> _getModel(String assetPath) async {
-    if(Platform.isAndroid) {
-      return 'flutter_assets/$assetPath)';
+    if(io.Platform.isAndroid) {
+      return 'flutter_assets/$assetPath';
     }
     final path = '${(await getApplicationSupportDirectory()).path}/$assetPath';
-    await Directory(dirname(path)).create(recursive: true);
-    final file = File(path);
+    await io.Directory(dirname(path)).create(recursive: true);
+    final file = io.File(path);
     if(!await file.exists())
       {
         final byteData = await rootBundle.load(assetPath);
-        await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+        await file.writeAsBytes(byteData.buffer
+            .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
       }
     return file.path;
   }
@@ -45,23 +46,24 @@ class _TreeSpeciesPageState extends State<TreeSpeciesPage> {
     try {
       final image = await ImagePicker().pickImage(source: fromCamera ? ImageSource.camera : ImageSource.gallery);
       if(image == null) return;
-      final imageTemp = File(image.path);
+      final imageTemp = io.File(image.path);
       setState(() => this.image = imageTemp);
     }
     on PlatformException catch(e) {
       print('Failed to pick image: $e');
     }
 
-    final modelPath = await _getModel('assets/plants_labeler.tflite');
-    final options = LocalLabelerOptions(confidenceThreshold: 0.1, modelPath: modelPath);
+    const path = 'assets/ml/plants_labeler.tflite';
+    final modelPath = await _getModel(path);
+    final options = LocalLabelerOptions(confidenceThreshold: 0.05, modelPath: modelPath);
     final imageLabeler = ImageLabeler(options: options);
     final InputImage inputImage = InputImage.fromFilePath(image!.path);
     final List<ImageLabel> labels = await imageLabeler.processImage(inputImage);
 
     for(ImageLabel label in labels)
       {
-        final String text = label.label;
-        print(text);
+        final plant = "${label.label} ${label.confidence}";
+        print(plant);
       }
   }
 
