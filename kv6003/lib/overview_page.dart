@@ -4,11 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'trees_page.dart';
 
 class OverviewPage extends StatefulWidget {
-  const OverviewPage({super.key, required this.selectedIndex, required this.isDarkMode, required this.closePage});
+  const OverviewPage({super.key, required this.selectedIndex, required this.isDarkMode});
 
   final int selectedIndex;
   final bool isDarkMode;
-  final VoidCallback closePage;
 
   @override
   State<OverviewPage> createState() => _OverviewPageState();
@@ -98,7 +97,7 @@ class _OverviewPageState extends State<OverviewPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      FilledButton.tonal(onPressed: widget.closePage, child: const Text("Back")),
+                      FilledButton.tonal(onPressed: () {Navigator.pop(context);}, child: const Text("Back")),
                       const SizedBox(width: 8),
                       FilledButton.icon(onPressed: () {
                         Navigator.push(

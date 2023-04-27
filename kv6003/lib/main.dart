@@ -31,7 +31,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  int _selectedIndex = -1;
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -51,16 +51,6 @@ class _SearchPageState extends State<SearchPage> {
           systemNavigationBarIconBrightness: Brightness.dark,
           statusBarIconBrightness: Brightness.dark));
     }
-
-    var selectParkSnackbar = SnackBar(
-        content: const Text(
-            'Please select a location first, before clicking "See Overview".'),
-        action: SnackBarAction(
-          label: 'Close',
-          onPressed: () {
-            ScaffoldMessenger.of(context).clearSnackBars();
-          },
-        ));
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -100,71 +90,51 @@ class _SearchPageState extends State<SearchPage> {
           Expanded(
               child: Material(
             child: ListView.builder(
-                itemCount: 16,
+                itemCount: 15,
                 itemBuilder: (BuildContext context, int index) {
-                  if (index == 15) {
-                    return const SizedBox(
-                      height: 64,
-                    );
-                  }
-                    return ListTile(
-                      tileColor: ColorScheme.fromSeed(
-                              brightness: isDarkMode ? Brightness.dark : Brightness.light,
-                              seedColor: parks[index].color)
-                          .surface,
-                      textColor: ColorScheme.fromSeed(
-                              brightness: isDarkMode ? Brightness.dark : Brightness.light,
-                              seedColor: parks[index].color)
-                          .onSurface,
-                      selectedTileColor: ColorScheme.fromSeed(
-                              brightness: isDarkMode ? Brightness.dark : Brightness.light,
-                              seedColor: parks[index].color)
-                          .onSurface
-                          .withOpacity(0.12),
-                      selectedColor: ColorScheme.fromSeed(
-                              brightness: isDarkMode ? Brightness.dark : Brightness.light,
-                              seedColor: parks[index].color)
-                          .onSurface,
-                      title: Text(parks[index].name),
-                      leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
-                            parks[index].photo,
-                            fit: BoxFit.cover,
-                            height: 40,
-                            width: 40,
-                          )),
-                      selected: index == _selectedIndex,
-                      onTap: () {
-                        setState(() {
-                          _selectedIndex = index;
-                        });
+                  return OpenContainer(
+                    transitionDuration: const Duration(milliseconds: 500),
+                      openBuilder: (context, close) {
+                        return OverviewPage(selectedIndex: _selectedIndex, isDarkMode: isDarkMode);
                       },
-                    );
-                }),
-          ))
-        ]),
+                      openColor: isDarkMode ? ColorScheme.fromSeed(seedColor: parks[_selectedIndex].color, brightness: Brightness.dark).background : ColorScheme.fromSeed(seedColor: parks[_selectedIndex].color).background,
+                      closedColor: Theme.of(context).colorScheme.background,
+                      closedBuilder: (context, open) {
+                        return ListTile(
+                          tileColor: ColorScheme
+                              .fromSeed(
+                              brightness: isDarkMode
+                                  ? Brightness.dark
+                                  : Brightness.light,
+                              seedColor: parks[index].color)
+                              .surface,
+                          textColor: ColorScheme
+                              .fromSeed(
+                              brightness: isDarkMode
+                                  ? Brightness.dark
+                                  : Brightness.light,
+                              seedColor: parks[index].color)
+                              .onSurface,
+                          title: Text(parks[index].name),
+                          leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.asset(
+                                parks[index].photo,
+                                fit: BoxFit.cover,
+                                height: 40,
+                                width: 40,
+                              )),
+                          onTap: () {
+                            setState(() {
+                              _selectedIndex = index;
+                            });
+                            open();
+                          },
+                        );
+                      });
+                }))
+          )]),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: OpenContainer(
-          closedBuilder: (context, open) {
-            return FloatingActionButton.extended(
-              onPressed: () {
-                if (_selectedIndex == -1) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(selectParkSnackbar);
-                } else if (_selectedIndex != -1) {
-                  open();
-                }
-              },
-              label: const Text("See Overview"),
-            );
-          },
-          closedShape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          closedColor: Theme.of(context).colorScheme.primaryContainer,
-          openColor: Theme.of(context).colorScheme.surface,
-          openBuilder: (context, close) => OverviewPage(selectedIndex: _selectedIndex, isDarkMode: isDarkMode, closePage: close)),
     );
   }
 }
@@ -252,7 +222,7 @@ class _WelcomeCardState extends State<WelcomeCard> {
                   (Text(
                       "Welcome to the treeTRIP app! Here you can enter or choose a location where you want the trip to take place. Like a national park, or a heritage site.\n"
                       "You can also find places based on your location, by clicking the icon on the right of the search bar.\n"
-                      "After selecting a location tap \"See Overview\" to see overview of the trip available for this location and to start the trip.", style: GoogleFonts.robotoFlex(
+                      "After selecting a location an overview of the trip available for this location will appear and you'll be able to start the trip there.", style: GoogleFonts.robotoFlex(
                     fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
                   )))
               ],

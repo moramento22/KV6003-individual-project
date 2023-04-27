@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'trees.dart';
-import 'trees_species_page.dart';
+import 'tree_species_page.dart';
 
 class TreesPage extends StatefulWidget {
   const TreesPage({Key? key, required this.parkName}) : super(key: key);
@@ -33,12 +33,24 @@ class _TreesPageState extends State<TreesPage> {
                       child: ListView(
                         children: [
                           ListTile(
-                              onTap: () {},
+                              onTap: () {
+                                for (Tree tree in trees)
+                                  {
+                                    tree.done = false;
+                                    setState((){});
+                                  }
+                              },
                               leading: const Icon(Icons.restart_alt_rounded),
                               title: const Text("Reset trip")
                           ),
                           ListTile(
-                              onTap: () {Navigator.popUntil(context, (Route<dynamic> predicate) => predicate.isFirst);},
+                              onTap: () {
+                                for(Tree tree in trees)
+                                  {
+                                    tree.done = false;
+                                  }
+                                Navigator.popUntil(context, (Route<dynamic> predicate) => predicate.isFirst);
+                                },
                               leading: const Icon(Icons.home_rounded),
                               title: const Text("Leave trip and come back to home screen")
                           )
@@ -69,14 +81,14 @@ class _TreesPageState extends State<TreesPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: const [
-                        Text("To take a picture of a tree, tap the tree on the list below to reveal more complementary hint photos and tap the \"Take a photo\" button."),
+                        Text("When you tap a card for a tree, a page with more hint photos will appear. There you can either take a new photo of the tree, or choose one from photos on your device."),
                         Divider()
                       ],
                     ),
                   );
                 }
                 return SizedBox(
-                  height: 177,
+                  height: 182,
                   child: Card(
                     color: Theme.of(context).colorScheme.surfaceVariant,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -88,20 +100,20 @@ class _TreesPageState extends State<TreesPage> {
                           _selectedIndex = index-1;
                           Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => TreeSpeciesPage(treeName: trees[_selectedIndex].name, photo1: trees[_selectedIndex].photo1, photo2: trees[_selectedIndex].photo2, photo3: trees[_selectedIndex].photo3))
-                          );
+                              MaterialPageRoute(builder: (context) => TreeSpeciesPage(treeName: trees[_selectedIndex].name, photo1: trees[_selectedIndex].photo1, photo2: trees[_selectedIndex].photo2, photo3: trees[_selectedIndex].photo3, index: _selectedIndex))
+                          ).then((value) => setState(() {}));
                         });
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.asset(trees[index-1].photo1, height: 95, fit: BoxFit.cover)),
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: FittedBox(
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: RichText(
                                       text: TextSpan(
@@ -123,7 +135,8 @@ class _TreesPageState extends State<TreesPage> {
                                       )
                                   ),
                                 ),
-                              ),
+                                trees[index-1].done ? Ink(decoration: ShapeDecoration(color: Theme.of(context).colorScheme.primary, shape: const CircleBorder()), child: Icon(Icons.done_rounded, color: Theme.of(context).colorScheme.onPrimary)) : const SizedBox.shrink(),
+                              ],
                             ),
                           ),
                         ],
