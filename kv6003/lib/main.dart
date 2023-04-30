@@ -98,7 +98,7 @@ class _SearchPageState extends State<SearchPage> {
                         return OverviewPage(selectedIndex: _selectedIndex, isDarkMode: isDarkMode);
                       },
                       openColor: isDarkMode ? ColorScheme.fromSeed(seedColor: parks[_selectedIndex].color, brightness: Brightness.dark).background : ColorScheme.fromSeed(seedColor: parks[_selectedIndex].color).background,
-                      closedColor: Theme.of(context).colorScheme.background,
+                      closedColor: ColorScheme.fromSeed(brightness: isDarkMode ? Brightness.dark : Brightness.light, seedColor: parks[index].color).surface,
                       closedBuilder: (context, open) {
                         return ListTile(
                           tileColor: ColorScheme
