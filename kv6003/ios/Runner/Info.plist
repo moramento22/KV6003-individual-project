@@ -51,5 +51,7 @@
 	<string>The app needs access to the camera to be able to take a photo of a tree.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Microphone access is needed for the camera to work properly.</string>
+	<key>NSPhotoLibraryUSageDescription</key>
+	<string>The app needs access to the gallery to be able to choose a photo of a tree.</string>
 </dict>
 </plist>
